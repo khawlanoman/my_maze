@@ -1,9 +1,10 @@
 from .cell import Cell
 import random
 
-GREEN = "\033[42m"  
-RED = "\033[41m"  
-RESET = "\033[0m" 
+GREEN = "\033[42m"
+RED = "\033[41m"
+RESET = "\033[0m"
+
 
 def create_maze(width, height):
     maze = [[Cell() for c in range(width)] for r in range(height)]
@@ -21,7 +22,7 @@ def create_maze(width, height):
                 cell.s = 1
             if c == 0:
                 cell.w = 1
-            if c == width -1:
+            if c == width - 1:
                 cell.e = 1
 
             row.append(cell)
@@ -29,6 +30,7 @@ def create_maze(width, height):
         gird_tab.append(row)
 
     return maze
+
 
 def create_block_42(width, height):
     if width <= 8 or height <= 6:
@@ -41,8 +43,8 @@ def create_block_42(width, height):
 
     blocK_42 = [
         (y, x),(y, x + 4),(y, x + 5),(y, x + 6),
-        (y+1,x),(y+1,x + 6),
-        (y+2,x),(y+2,x+1),(y+2,x+2),(y+2,x+4),(y+2,x+5),(y+2,x+ 6),
+        (y + 1, x),(y + 1 ,x + 6),
+        (y + 2 ,x),(y + 2, x + 1),(y + 2 , x + 2),(y + 2, x + 4),(y + 2, x + 5),(y + 2, x + 6),
         (y+3,x+2),(y+3, x+4),
         (y+4, x+2),(y+4, x +4),(y+4, x+5),(y+4, x +6)
     ]
@@ -50,40 +52,40 @@ def create_block_42(width, height):
     return blocK_42
 
 
-def print_maze(maze, width, height, blocK_42, entry, exit_end):
+def print_maze(maze, width, height, blocK_42, entry, exit_end, path):
 
     cell_width = 3
     cell_height = 1
-
     grid1 = []
 
     for r in range(height):
     
         top_row = "█"
         for c in range(width):
-            if maze[r][c].n:       
+            if maze[r][c].n:
                 top_row += "█" * cell_width
             else:
                 top_row += " " * cell_width
             top_row += "█"
         grid1.append(top_row)
-
     
         for h in range(cell_height):
-            row = "█"  
+            row = "█"
             for c in range(width):
                 if (r, c) in blocK_42:
-                    content = f"{GREEN}   {RESET}"
+                    content = f"   "
                 elif (r, c) == entry:
-                    content = f"{GREEN}   {RESET}"
+                    content = f" s "
                 elif (r, c) == exit_end:
-                    content = f"{RED}   {RESET}"
+                    content = f" e "
+        
+                elif path and (r, c) in path:
+                    content = f" ➡ "
                 else:
                     content = " " * cell_width
 
                 row += content
 
-            
                 if c == width - 1 or maze[r][c].e:
                     row += "█"
                 else:
