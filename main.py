@@ -18,10 +18,10 @@ prefect = True if config["PERFECT"] == "TRUE" else False
 maze = create_maze(width, height)
 
 blocK_42 = create_block_42(width, height)
-#binary_tree(maze, width, height, blocK_42)
+binary_tree(maze, width, height, blocK_42)
 #if prefect == False:
-dfs(maze, width, height, start=entry, block_42=blocK_42)
-non_perfect(maze, width, height, blocK_42)
+#dfs(maze, width, height, start=entry, block_42=blocK_42)
+#non_perfect(maze, width, height, blocK_42)
 path = find_shortest_path_bfs(maze, entry, exit_end, width, height, blocK_42)
 grid1 = print_maze(maze, width, height, blocK_42, entry, exit_end, path)
 
@@ -40,7 +40,7 @@ def main(stdscr, grid1):
     for row, line in enumerate(grid1):
             stdscr.addstr(row, 0, line)
    
-    stdscr.addstr(40, 4, "WELCOME TO A_MAZE_ING ")
+    #stdscr.addstr(40, 4, "WELCOME TO A_MAZE_ING ")
     stdscr.refresh()
     stdscr.getch()
 
