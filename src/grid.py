@@ -1,5 +1,5 @@
 from .cell import Cell
-import random
+import random # noqa
 
 GREEN = "\033[42m"
 RED = "\033[41m"
@@ -8,7 +8,6 @@ RESET = "\033[0m"
 
 def create_maze(width, height):
     maze = [[Cell() for c in range(width)] for r in range(height)]
-
     gird_tab = []
 
     for c in range(height):
@@ -32,7 +31,7 @@ def create_maze(width, height):
     return maze
 
 
-def create_block_42(width, height):
+def create_block_42(width, height, entry, exit_end):
     if width <= 8 or height <= 6:
         return []
     block_height = 5
@@ -42,13 +41,15 @@ def create_block_42(width, height):
     x = (width // 2) - (block_width // 2)
 
     blocK_42 = [
-        (y, x),(y, x + 4),(y, x + 5),(y, x + 6),
-        (y + 1, x),(y + 1 ,x + 6),
-        (y + 2 ,x),(y + 2, x + 1),(y + 2 , x + 2),(y + 2, x + 4),(y + 2, x + 5),(y + 2, x + 6),
+        (y, x), (y, x + 4), (y, x + 5), (y, x + 6),
+        (y + 1, x), (y + 1, x + 6),
+        (y + 2 ,x),(y + 2, x + 1), (y + 2 , x + 2), (y + 2, x + 4), (y + 2, x + 5), (y + 2, x + 6),
         (y+3,x+2),(y+3, x+4),
-        (y+4, x+2),(y+4, x +4),(y+4, x+5),(y+4, x +6)
+        (y+4, x+2),(y+4, x + 4), (y + 4, x + 5), (y+4, x +6)
     ]
-
+    if entry in blocK_42 or exit_end in blocK_42:
+        print("Error: 'ENTRY' or 'EXIT' has the same coordinates as '42' block!")
+        exit(1)
     return blocK_42
 
 
@@ -59,7 +60,6 @@ def print_maze(maze, width, height, blocK_42, entry, exit_end, path):
     grid1 = []
 
     for r in range(height):
-    
         top_row = "█"
         for c in range(width):
             if maze[r][c].n:
@@ -68,24 +68,20 @@ def print_maze(maze, width, height, blocK_42, entry, exit_end, path):
                 top_row += " " * cell_width
             top_row += "█"
         grid1.append(top_row)
-    
         for h in range(cell_height):
             row = "█"
             for c in range(width):
                 if (r, c) in blocK_42:
-                    content = f"   "
+                    content = "   "
                 elif (r, c) == entry:
-                    content = f" s "
+                    content = " s "
                 elif (r, c) == exit_end:
-                    content = f" e "
-        
+                    content = " e "
                 elif path and (r, c) in path:
-                    content = f" ➡ "
+                    content = " ➡ "
                 else:
                     content = " " * cell_width
-
                 row += content
-
                 if c == width - 1 or maze[r][c].e:
                     row += "█"
                 else:
@@ -96,10 +92,7 @@ def print_maze(maze, width, height, blocK_42, entry, exit_end, path):
     for c in range(width):
         bottom_row += "█" * cell_width + "█"
     grid1.append(bottom_row)
-
     return (grid1)
-
-
 
 
 def cell_to_hex(cell):
@@ -108,20 +101,19 @@ def cell_to_hex(cell):
     value += cell.e * 2
     value += cell.s * 4
     value += cell.w * 8
-    return format(value, 'x')
+    return format(value, 'X')
 
 
-def write_hex_output(maze, width, height):
-    file = open("output_maze.txt","w")
-    for c in range(height):
-        line =  ""
-        for r in range(width):
-            line += cell_to_hex(maze[c][r])
-        file.write(line +"\n")
-
-
-def write_visual_output(grid1):
-    with open("maze.txt", "w") as file:
-        for row in grid1:
-            file.write(''.join(row))
-            file.write('\n')
+def write_hex_output(maze, width, height, out_file, entry, exit_end, moves):
+    with open(out_file, "w") as file:
+        for c in range(height):
+            line = ""
+            for r in range(width):
+                line += cell_to_hex(maze[c][r])
+            file.write(line + "\n")
+        entry_coor = f"{entry[0]},{entry[1]}"
+        exit_coor = f"{exit_end[0]},{exit_end[1]}"
+        moves_as_string = "".join(moves)
+        file.write("\n" + entry_coor + "\n")
+        file.write(exit_coor + "\n")
+        file.write(moves_as_string)

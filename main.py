@@ -1,5 +1,5 @@
 from src.read_config import read_config
-from src.grid import create_maze, create_block_42, print_maze, write_hex_output, write_visual_output
+from src.grid import create_maze, create_block_42, print_maze, write_hex_output
 from src.algos import dfs
 from src.algos import binary_tree, non_perfect, find_shortest_path_bfs # noqa
 import time # q
@@ -17,12 +17,17 @@ prefect = True if config["PERFECT"] == "TRUE" else False
 
 maze = create_maze(width, height)
 
-blocK_42 = create_block_42(width, height)
-binary_tree(maze, width, height, blocK_42)
+blocK_42 = create_block_42(width, height, entry, exit_end)
+binary_tree(maze, width, height, blocK_42, entry, exit_end)
 #if prefect == False:
 #dfs(maze, width, height, start=entry, block_42=blocK_42)
-#non_perfect(maze, width, height, blocK_42)
-path = find_shortest_path_bfs(maze, entry, exit_end, width, height, blocK_42)
+non_perfect(maze, width, height, blocK_42)
+result = find_shortest_path_bfs(maze, entry, exit_end, width, height, blocK_42)
+if result:
+    path, moves = result
+else:
+    path, moves = [], 0
+
 grid1 = print_maze(maze, width, height, blocK_42, entry, exit_end, path)
 
 #print("PATH LENGTH:", len(path))
@@ -30,17 +35,17 @@ grid1 = print_maze(maze, width, height, blocK_42, entry, exit_end, path)
 #for line in grid1:
     #time.sleep(0.10)
 #    print(line)
-write_hex_output(maze, width, height)
-write_visual_output(grid1)
+write_hex_output(maze, width, height, out_file, entry, exit_end, moves)
 
-def main(stdscr, grid1):
-    curses.curs_set(0)
+def main(stdscr, grid):
     stdscr.clear()
+    height, width = stdscr.getmaxyx()
 
-    for row, line in enumerate(grid1):
-            stdscr.addstr(row, 0, line)
-   
-    #stdscr.addstr(40, 4, "WELCOME TO A_MAZE_ING ")
+    for row, line in enumerate(grid):
+        if row >= height:
+            break
+        stdscr.addstr(row, 0, line[:width - 1])
+
     stdscr.refresh()
     stdscr.getch()
 
