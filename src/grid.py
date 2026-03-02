@@ -1,10 +1,6 @@
 from .cell import Cell
 import random # noqa
 
-GREEN = "\033[42m"
-RED = "\033[41m"
-RESET = "\033[0m"
-
 
 def create_maze(width, height):
     maze = [[Cell() for c in range(width)] for r in range(height)]
@@ -54,6 +50,7 @@ def create_block_42(width, height, entry, exit_end):
 
 
 def print_maze(maze, width, height, blocK_42, entry, exit_end, path):
+
 
     cell_width = 3
     cell_height = 1
