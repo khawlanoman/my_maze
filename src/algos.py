@@ -41,10 +41,8 @@ def dfs(maze, width, height, start, block_42):
         for direction, (dr, dc, _, _) in DIRECTIONS.items():
             nr, nc = r + dr, c + dc
 
-            if (0 <= nr < height and
-                0 <= nc < width and
-                (nr, nc) not in visited and
-                (nr, nc) not in block_42):
+            if (0 <= nr < height and 0 <= nc < width
+                    and (nr, nc) not in visited and (nr, nc) not in block_42):
                 neighbors.append(direction)
 
         if neighbors:
@@ -55,53 +53,6 @@ def dfs(maze, width, height, start, block_42):
             stack.append((nr, nc))
         else:
             stack.pop()
-
-
-# ==========================================================
-# BINARY TREE MAZE GENERATION
-# ==========================================================
-def binary_tree(maze, width, height, block_42, entry, exit_end):
-
-    r, c = entry
-
-    # Create guaranteed path from entry to exit
-    while (r, c) != exit_end:
-        moves = []
-
-        if r < exit_end[0] and (r + 1, c) not in block_42:
-            moves.append('S')
-
-        if c < exit_end[1] and (r, c + 1) not in block_42:
-            moves.append('E')
-
-        if not moves:
-            if r < height - 1:
-                moves.append('S')
-            if c < width - 1:
-                moves.append('E')
-
-        chosen = random.choice(moves)
-        r, c = break_wall(maze, r, c, chosen)
-
-    # Fill remaining cells
-    for r in range(height):
-        for c in range(width):
-
-            if (r, c) in block_42 or (r, c) in (entry, exit_end):
-                continue
-
-            possible = []
-
-            if r > 0 and (r - 1, c) not in block_42:
-                possible.append('N')
-
-            if c < width - 1 and (r, c + 1) not in block_42:
-                possible.append('E')
-
-            if possible:
-                chosen = random.choice(possible)
-                break_wall(maze, r, c, chosen)
-
 
 # ==========================================================
 # MAKE MAZE NON-PERFECT (Add Extra Openings)
@@ -123,9 +74,8 @@ def non_perfect(maze, width, height, block_42):
         for direction, (dr, dc, _, _) in DIRECTIONS.items():
             nr, nc = r + dr, c + dc
 
-            if (0 <= nr < height and
-                0 <= nc < width and
-                (nr, nc) not in block_42):
+            if (0 <= nr < height and 0 <= nc < width
+                and (nr, nc) not in block_42):
                 possible.append(direction)
 
         if possible:
